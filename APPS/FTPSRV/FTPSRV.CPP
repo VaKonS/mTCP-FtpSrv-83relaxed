@@ -75,7 +75,7 @@
 #include "arp.h"
 #include "tcp.h"
 #include "tcpsockm.h"
-#include "telnet.h"
+#define TEL_IAC  (255) //#include "telnet.h"
 #include "ftpsrv.h"
 #include "ftpcl.h"
 
