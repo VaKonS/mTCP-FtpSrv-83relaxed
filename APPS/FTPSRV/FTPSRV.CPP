@@ -3166,8 +3166,6 @@ int normalizeDir( char *buffer, int bufferLen ) {
     int tmpIndex = 0;
     while ( 1 ) {
 
-//addToScreen( 1, "tmpindex = %i\n", tmpIndex );
-
       if ( buffer[bufferIndex] == 0 ) {
         // Out of data
         break;
@@ -3188,9 +3186,6 @@ int normalizeDir( char *buffer, int bufferLen ) {
     }
     tmp_nd[tmpIndex] = 0;
 
-//addToScreen( 1, "tmpindex = %i\n", tmpIndex );
-//addToScreen( 1, "tmp_nd: %s\n", tmp_nd );
-
     if ( tmp_nd[0] == 0 ) {
       if ( buffer[bufferIndex] == 0 ) {
         // Empty component and end of input ..  end main loop.
@@ -3204,62 +3199,37 @@ int normalizeDir( char *buffer, int bufferLen ) {
     }
 
     if ( !isValidDosFilename( tmp_nd ) ) {
-//      return 1; //error
-
+//      return 1;
 //-----------------------------------------------------
-//    tmp_nd[tmpIndex] = 0;
 
-//  if (tmp_nd==NULL) return 0; // invalid name
-
-//addToScreen( 1, "Fixing...\n" );
-
-  // Special case - check for . and ..
-  if ( strcmp( tmp_nd, "." ) != 0 && strcmp( tmp_nd, ".." ) != 0 ) {   // don't convert '..'
-
-  int len1 = strlen(tmp_nd);
-//addToScreen( 1, "len1 = %i\n", len1 );
-
-  if ( len1 != 0 ) {
-
-    if ( !isValidDosChar( tmp_nd[0] ) ) tmp_nd[0]='_';
-
-    int i1;
-    for ( i1=1; (i1<8) && (i1<len1) ; i1++ ) {
-//addToScreen( 1, "i1 = %i\n", i1);
-      if ( tmp_nd[i1] == '.' ) break;
-      if ( !isValidDosChar( tmp_nd[i1] ) ) tmp_nd[i1]='_';
-    }
-
-//addToScreen( 1, "i1 = %i, len1 = %i\n", i1, len1 );
-    if ( i1 != len1 ) {
-
-      tmp_nd[i1] = '.';
-//addToScreen( 1, "+.\n" );
-
-      i1++;
-      int j1;
-      for ( j1=0; (j1+i1) < len1; j1++ ) {
-//addToScreen( 1, "i1+j1 = %i\n", j1+i1 );
-        if ( !isValidDosChar( tmp_nd[j1+i1] ) ) tmp_nd[j1+i1] = '_';
+      // Special case - check for . and ..
+      if ( strcmp( tmp_nd, "." ) != 0 && strcmp( tmp_nd, ".." ) != 0 ) {   // don't convert '..'
+        int len1 = strlen(tmp_nd);
+        if ( len1 != 0 ) {
+          if ( !isValidDosChar( tmp_nd[0] ) ) tmp_nd[0]='_';
+          int i1;
+          for ( i1=1; (i1<8) && (i1<len1) ; i1++ ) {
+            if ( tmp_nd[i1] == '.' ) break;
+            if ( !isValidDosChar( tmp_nd[i1] ) ) tmp_nd[i1]='_';
+          }
+          if ( i1 != len1 ) {
+            tmp_nd[i1] = '.';
+            i1++;
+            int j1;
+            for ( j1=0; (j1+i1) < len1; j1++ ) {
+              if ( !isValidDosChar( tmp_nd[j1+i1] ) ) tmp_nd[j1+i1] = '_';
+            }
+            if ( j1 >= 3 ) tmp_nd[i1 + 3] = 0; // truncate extension
+          } // i1 != len1
+        } // len1 != 0
+      } // ..
+      if ( !isValidDosFilename( tmp_nd ) ) {
+        addToScreen( 1, "Invalid name: '%s'\n", tmp_nd );
+        return 1;
       }
 
-      if ( j1 >= 3 ) tmp_nd[i1 + 3] = 0; // truncate extension
-
-//      return 1; //success
-
-    } // i1 != len1
-  } // len1 != 0
-  } // ..
-//addToScreen( 1, "converted: %s\n", tmp_nd );
-
-  if ( !isValidDosFilename( tmp_nd ) ) {
-addToScreen( 1, "Invalid name: '%s'\n", tmp_nd );
-    return 1;
-  }
-
-
 //---------------------------------------------
-    } // !isValidDosFilename
+    }
 
     if ( strcmp( tmp_nd, ".." ) == 0 ) {
       if ( top > 0 ) {
@@ -3270,7 +3240,7 @@ addToScreen( 1, "Invalid name: '%s'\n", tmp_nd );
       // Do nothing
     }
     else { // if ( tmp_nd[0] ) { // checked in line 3194
-      // Special case, 1st character 0xE5 means deleted ₣ile
+      // Special case, 1st character 0xE5 means deleted file
       if ( tmp_nd[0] == 0xE5 ) tmp_nd[0] = '_';
       // Add it to the stack
       strcpy(component[top], tmp_nd );
@@ -3304,7 +3274,6 @@ addToScreen( 1, "Invalid name: '%s'\n", tmp_nd );
 
   // Uppercase the output
   strupr( buffer );
-//addToScreen( 1, "buffer = %s\n", buffer );
 
   return 0;
 }
