@@ -60,4 +60,4 @@ patch : .symbolic
   wpp $[* $(compile_options)
 
 ftpsrv.exe : $(tcpobjs) $(objs)
-  wlink system dos option map option eliminate option stack=4096 name $@ file *.obj
+  wlink system dos option map option eliminate option stack=8192 name $@ file *.obj
