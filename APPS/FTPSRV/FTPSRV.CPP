@@ -3500,11 +3500,11 @@ static int readConfigParms( void ) {
 
   if ( Utils::getAppValue( "FTPSRV_PASV_PORTS", tmpBuffer, 10 ) == 0 ) {
     tmpVal = atoi( tmpBuffer );
-    if ( tmpVal > 255 && tmpVal < 10241 ) {
+    if ( tmpVal > 0 && tmpVal < 10241 ) {
       Pasv_Ports = tmpVal;
     }
     else {
-      addToScreen( 1, "FTPSRV_PASV_PORTS must be between 256 and 10240\n" );
+      addToScreen( 1, "FTPSRV_PASV_PORTS must be between 1 and 10240\n" );
       return 1;
     }
   }
